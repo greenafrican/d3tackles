@@ -1,4 +1,4 @@
-function bubbleChart() {
+function rugbyChart() {
     var margin = {
             top: 20,
             right: 20,
@@ -18,30 +18,22 @@ function bubbleChart() {
           "CRUSADERS": {x: width / 1.5, y: height / 2}
         };
         var force = d3.layout.force();
-        var svg = d3.selectAll("#enter");
-        var node = svg.selectAll(".node");      
+        var svg = d3.select("#example")
+        var node = svg.selectAll(".node");  
     
     function chart(selection) {
         selection.each(function (d,i) {
-            var chartElem = d3.select(this);
-            // Set up a D3 force layout
-            force = d3.layout.force().size([width, height]); 
+            
+            force = d3.layout.force()
+                .size([width, height]);
 
-            // Select the svg element, if it exists.
-            var svg = chartElem.selectAll('svg').data([d]);
-
-            var svgEnter = svg.enter();
-
-            svgEnter.append('svg');
-
-            svg
+            var svg = d3.select("#example").append("svg")
                 .attr("width", width)
                 .attr("height", height);
 
-            // Bind the data to the force layout nodes
             force.nodes(d);
 
-            node = svgEnter.selectAll(".node")
+            node = svg.selectAll(".node")
                 .data(d)
                 .enter().append("g")
                 .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })

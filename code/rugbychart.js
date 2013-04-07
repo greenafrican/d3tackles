@@ -17,6 +17,11 @@ function rugbyChart() {
           "STORMERS": {x: width / 3, y: height / 2},
           "CRUSADERS": {x: width / 1.5, y: height / 2}
         };
+        fb_centers = {
+          "FORWARDS": {x: width / 3, y: height / 3},
+          "BACKS": {x: width / 1.5, y: height / 1.5}
+        };
+        var target = center;
         var force = d3.layout.force();
         var svg = d3.select("#example")
         var node = svg.selectAll(".node");  
@@ -72,6 +77,7 @@ function rugbyChart() {
 
     function move_towards_center(alpha) {
         return function(d) {
+          target = center;
           d.x = d.x + (center.x - d.x) * (0.1 + 0.02) * alpha;
           d.y = d.y + (center.y - d.y) * (0.1 + 0.02) * alpha;
         };
@@ -81,7 +87,17 @@ function rugbyChart() {
         return function(d) {
           target = team_centers[d.Team];
           d.x = d.x + (target.x - d.x) * (0.1 + 0.02) * alpha;
-          d.y = d.y + (target.y - d.y) * (0.1 + 0.02) * alpha;
+          d.y = d.y + (center.y - d.y) * (0.1 + 0.02) * alpha;
+        };
+    }
+
+    function move_towards_fb(alpha) {
+        var fb;
+        return function(d) {
+            if (d.Pos >= 9) { fb = "BACKS"; console.log(fb);} else { fb ="FORWARDS"; };
+            target = fb_centers[fb];
+            d.y = d.y + (target.y - d.y) * (0.1 + 0.02) * alpha;
+            d.x = d.x + (center.x - d.x) * (0.1 + 0.02) * alpha;
         };
     }
 
@@ -89,6 +105,9 @@ function rugbyChart() {
         force.on("tick", function(e) {
             if (group == "team") {
                 node.each(move_towards_team(e.alpha))
+                    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            } else if (group == "fb") {
+                node.each(move_towards_fb(e.alpha))
                     .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
             } else {
                 node.each(move_towards_center(e.alpha))

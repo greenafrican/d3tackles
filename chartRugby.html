@@ -18,7 +18,7 @@
     padding: 4px;
 }
 </style>
-<a id="all" href="#">all</a> <a id="team" href="#">team</a>
+<a id="all" href="#">all</a> <a id="team" href="#">team</a> <a id="fb" href="#">Forwards/Backs</a>
 <p id="example">
 <script>
     $(document).ready(function () {
@@ -33,6 +33,9 @@
         });
         $("#team").click(function(){
            myChart.group("team"); 
+        });
+        $("#fb").click(function(){
+           myChart.group("fb"); 
         });
     });
 </script>
